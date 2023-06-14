@@ -1,0 +1,17 @@
+ // Crear las restricciones para el primer botón
+        GridBagConstraints constraintsBoton1 = new GridBagConstraints();
+        constraintsBoton1.gridx = 0; // Columna inicial
+        constraintsBoton1.gridy = 0; // Fila inicial
+        constraintsBoton1.gridwidth = 1; // Ancho en columnas
+        constraintsBoton1.gridheight = 1; // Alto en filas
+
+        // Crear las restricciones para el segundo botón
+        GridBagConstraints constraintsBoton2 = new GridBagConstraints();
+        constraintsBoton2.gridx = 0; // Columna inicial
+        constraintsBoton2.gridy = 1; // Fila inicial
+        constraintsBoton2.gridwidth = 2; // Ancho en columnas
+        constraintsBoton2.gridheight = 1; // Alto en filas
+
+        // Agregar los botones al diálogo con las restricciones correspondientes
+        add(boton1, constraintsBoton1);
+        add(boton2, constraintsBoton2);
