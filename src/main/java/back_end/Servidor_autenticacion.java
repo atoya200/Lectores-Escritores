@@ -2,27 +2,36 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Sockets;
+package back_end;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  *
  * @author Agustín Toya
  */
-public class Servidor_con_hilos {
+public class Servidor_autenticacion {
+
+    private static HashMap<String, String> usersPass = new HashMap<>();
 
     public static void main(String[] args) {
+        HashMap<String, String> usersContras = new HashMap<>();
+
+        cargarUsuarios();
+        
         ServerSocket serverSocket = null;
 
         try {
-            // Crear el socket del servidor en el puerto 8000
-            serverSocket = new ServerSocket(8000);
+            // Crear el socket del servidor en el puerto 8001
+            serverSocket = new ServerSocket(8001);
             System.out.println("Servidor esperando conexiones...");
 
             while (true) {
@@ -31,7 +40,7 @@ public class Servidor_con_hilos {
                 System.out.println("Nuevo cliente conectado.");
 
                 // Crear un nuevo hilo para manejar al cliente
-                Thread clientThread = new Thread(new ClienteLoginHandler(clientSocket));
+                Thread clientThread = new Thread(new ClientHandler(clientSocket, usersContras));
                 clientThread.start();
             }
         } catch (IOException e) {
@@ -47,14 +56,41 @@ public class Servidor_con_hilos {
             }
         }
     }
+
+    private static void cargarUsuarios() {
+        String rutaArchivo = "C:\\Users\\Agustín Toya\\Documents\\NetBeansProjects\\Lectores-Escritores\\src\\main\\java\\v2\\datos_inicio_sesion";
+        FileReader fr;
+
+        try {
+            fr = new FileReader(rutaArchivo);
+            BufferedReader br = new BufferedReader(fr);
+            String lineaActual = br.readLine();
+            while (lineaActual != null) {
+                String[] datos = lineaActual.split(",");
+                if (!usersPass.containsKey(datos[0])) {
+                    usersPass.put(datos[0], datos[1]);
+                }
+                lineaActual = br.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error al leer el archivo " + rutaArchivo);
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo " + rutaArchivo);
+            e.printStackTrace();
+        }
+    }
 }
 
-class ClienteLoginHandler implements Runnable {
+class ClientHandler implements Runnable {
 
     private Socket clientSocket;
 
-    public ClienteLoginHandler(Socket clientSocket) {
+    private HashMap<String, String> userPass;
+
+    public ClientHandler(Socket clientSocket, HashMap<String, String> usersPass) {
         this.clientSocket = clientSocket;
+        this.userPass = usersPass;
     }
 
     @Override
@@ -72,43 +108,17 @@ class ClienteLoginHandler implements Runnable {
             String[] datos = mensaje.split("|");
             String mensajeServidor = "Hola, cliente. ¡Aquí está tu mensaje!";
 
-            // Si son tres datos, entonces es escritor
-            // Primer dato, si lo va a crear o no, si no lo va a crear es que 
-            // va a editar un archivo, por ende lo recuperamos, y se lo mandamos, cerramos conexión
-            // esperando que mande o no la data modificada en un futuro
-            // Si es un dato, entonces es un lector
-            if (datos.length == 3) {
-                String rutaArchivo = datos[2];
-                String contenido =  datos[1];
-                // Escritor
-                if (datos[0].equals("1")) {
-                    // recupera el contenido del archivo
-                    // le envía la data
-                } else if (datos[0].equals("2")) {
-                    // Tiene que guardar la nueva dirección del archivo 
-                    // que se va a crear
-                    // Se escribe el contenido
-                    // Devuelve el mensaje de confirmación
-                    mensajeServidor = "Se ha creado el archivo satisfactoriamente";
+            // Se supone que se le pasa el usuario y la contraseña
+            // Deben haber dos datos si o si
+            if (datos.length == 2) {
+                String user = datos[0];
+                String pass = datos[1];
+                if (!userPass.containsKey(user)) {
+                    mensajeServidor = "1";
+                } else if (userPass.containsKey(user) && !userPass.get(user).equals(pass)) {
+                    mensajeServidor = "2";
                 } else {
-                    String texto = datos[1];
-                    // es para escribir directamente en este caso
-                    // llama a la función de escribir
-                    // si no puede, le devuelve el mensaje al usuario
-                    // si pudo, le envía el mensaje de confirmación
-                    mensajeServidor = "Se ha editado el archivo correctamente";
-                }
-            } else if (datos.length == 1) {
-                if (datos.equals("Nombres archivos")) {
-                    // Obtiene los nombres de los archivos 
-                    // lo carga al mensaje y lo devuelve
-                } else {
-                    // Lector
-                    String rutaArchivo = datos[0];
-                    // busca el archivo
-                    // si no puede leer, notifica
-                    // si puede, lo envia
-
+                    mensajeServidor = "3";
                 }
             } else {
                 System.out.println("Error en el sistema, deberían ser dos o un dato");
@@ -135,4 +145,5 @@ class ClienteLoginHandler implements Runnable {
             }
         }
     }
+
 }
