@@ -146,7 +146,7 @@ public class Funciones {
         return false;
     }
 
-    static boolean validarDatos(String nombreUsuario, String contraseña) {
+    public static boolean validarDatos(String nombreUsuario, String contraseña) {
         String rutaArchivo = "C:\\Users\\Agustín Toya\\Documents\\NetBeansProjects\\Lectores-Escritores\\src\\main\\java\\v2\\datos_inicio_sesion";
         FileReader fr;
         try {

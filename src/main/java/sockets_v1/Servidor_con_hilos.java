@@ -2,9 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package back_end;
+package sockets_v1;
 
+import back_end.Escritor;
+import back_end.Lector;
+import back_end.Recurso;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,7 +25,6 @@ import java.util.HashMap;
 public class Servidor_con_hilos {
 
     private static HashMap<String, Recurso> recursos = new HashMap<>();
-    private static HashMap<String, String> archivosSistema = new HashMap<>();
     private static HashMap<Recurso, Integer> idsPorRecurso = new HashMap<>();
 
     private static String rutaCarpeta = "C:\\Users\\Agustín Toya\\Documents\\NetBeansProjects\\Lectores-Escritores\\src\\main\\java\\archivosPrueba\\";
@@ -52,7 +56,7 @@ public class Servidor_con_hilos {
                 System.out.println("Nuevo cliente conectado.");
 
                 // Crear un nuevo hilo para manejar al cliente
-                Thread clientThread = new Thread(new ClienteHandler(clientSocket));
+                Thread clientThread = new Thread(new ClienteHandler(clientSocket, new DataOutputStream(clientSocket.getOutputStream()), new DataInputStream(clientSocket.getInputStream())));
                 clientThread.start();
             }
         } catch (IOException e) {
@@ -78,7 +82,6 @@ public class Servidor_con_hilos {
                 if (archivo.isFile()) {
                     int punto = archivo.getName().indexOf(".");
                     String nombreArchivo = archivo.getName().substring(0, punto);
-                    archivosSistema.put(nombreArchivo, archivo.getAbsolutePath());
                     Recurso r = new Recurso(archivo.getAbsolutePath());
                     recursos.put(nombreArchivo, r);
                     idsPorRecurso.put(r, 0);
@@ -102,9 +105,9 @@ class ClienteHandler implements Runnable {
     
     
 
-    public ClienteHandler(Socket clientSocket, clientSocket.getOutputStream() o, BufferedReader br) {
-        this.out = new PrintWriter(clientSocket.getOutputStream(), true);
-        this.in = br;
+    public ClienteHandler(Socket clientSocket, DataOutputStream o, DataInputStream br) {
+        this.out = new PrintWriter(o, true);
+        this.in = new BufferedReader(new InputStreamReader(br));
         this.clientSocket = clientSocket;
     }
 
@@ -121,7 +124,7 @@ class ClienteHandler implements Runnable {
 
             // Obtenemos los datos que envió el usuario
             String mensaje = in.readLine();
-            System.out.println("hasta acá corrio ");
+            System.out.println("hasta acá corrio " + mensaje);
             String[] datos = mensaje.split("|");
             String mensajeServidor = "Hola, cliente. ¡Aquí está tu mensaje!";
 

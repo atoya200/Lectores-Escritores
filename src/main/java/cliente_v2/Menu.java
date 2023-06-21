@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package cliente;
+package cliente_v2;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,7 +10,10 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -23,13 +26,15 @@ import javax.swing.JPopupMenu;
  */
 public class Menu extends javax.swing.JPanel {
 
+    private ControladorCliente ctrl;
+
     /**
      * Creates new form panel1
      */
-    public Menu() {
-
-        String rutaArchivo = "C:/Users/Agustín Toya/Documents/NetBeansProjects/Lectores-Escritores/src/main/java/archivosPrueba";
-        Funciones.cargarArchivos(rutaArchivo);
+    public Menu(ControladorCliente controlador) {
+        this.ctrl = controlador;
+        String rutaArchivo = "C:/Users/Agustín Toya/Documents/NetBeansProjects/Lectores-Escritores/src/main/java/archivosPrueba/";
+        ctrl.cargarArchivos(rutaArchivo);
         initComponents();
 
         ingresaNombreLabel.setVisible(false);
@@ -40,13 +45,6 @@ public class Menu extends javax.swing.JPanel {
 
         cargarCombo();
 
-    }
-
-    public int[] getTamañoOptimo() {
-        int[] dimensiones = new int[2];
-        dimensiones[0] = jPanel3.getWidth();
-        dimensiones[1] = jPanel3.getHeight();
-        return dimensiones;
     }
 
     /**
@@ -270,35 +268,50 @@ public class Menu extends javax.swing.JPanel {
 
     private void continuarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_continuarKeyReleased
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            enviarDatos();
+            try {
+                enviarDatos();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
         }
     }//GEN-LAST:event_continuarKeyReleased
 
     private void continuarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_continuarKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            enviarDatos();
+            try {
+                enviarDatos();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
         }
     }//GEN-LAST:event_continuarKeyPressed
 
     private void continuarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_continuarMouseClicked
-        enviarDatos();
+        try {
+            enviarDatos();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
     }//GEN-LAST:event_continuarMouseClicked
 
     private void salirKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salirKeyReleased
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            Funciones.principal.volverInicioSesion();
+            ctrl.volverInicioSesion();
         }
     }//GEN-LAST:event_salirKeyReleased
 
     private void salirKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salirKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            Funciones.principal.volverInicioSesion();
+            ctrl.volverInicioSesion();
         }
     }//GEN-LAST:event_salirKeyPressed
 
     private void salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_salirMouseClicked
         // TODO add your handling code here:
-        Funciones.principal.volverInicioSesion();
+        ctrl.volverInicioSesion();
     }//GEN-LAST:event_salirMouseClicked
 
     private void opcionesArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesArchivosActionPerformed
@@ -332,48 +345,70 @@ public class Menu extends javax.swing.JPanel {
 
     private void ingresaNombreFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresaNombreFieldActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_ingresaNombreFieldActionPerformed
 
     private void ingresaNombreFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ingresaNombreFieldKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            if(!ingresaNombreField.getText().isBlank()){
-                enviarDatos();
+            if (!ingresaNombreField.getText().isBlank()) {
+                try {
+                    enviarDatos();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+
+                }
             }
         }
-        
+
     }//GEN-LAST:event_ingresaNombreFieldKeyPressed
 
-    private void enviarDatos() {
+    private void enviarDatos() throws FileNotFoundException {
+        String valorCombo = (String) opcionesArchivos.getSelectedItem();
         if (!(quiereLeer || quiereEscribir)) {
             advertencia.setText("Debe elegir una opción para poder continuar");
-            Funciones.principal.pack();
+            ctrl.getPrincipal().pack();
         } else if (quiereLeer) {
-            if (hayArchivos) {
-                Funciones.principal.irVentanaLectores((String) opcionesArchivos.getSelectedItem());
-                
+            if (!valorCombo.equals("Ninguno")) {
+                ctrl.irVentanaLectores(valorCombo);
+
             } else {
                 advertencia.setText("Debe seleccionar un archivo al menos");
             }
         } else {
             String textoNombre = ingresaNombreField.getText();
-            if (!textoNombre.isBlank() && hayArchivos) {
+            if (!textoNombre.isBlank() && !valorCombo.equals("Ninguno")) {
                 // Acá se da la situación de que tiene elegido algo en el combo y escribió algo en el campo
+
                 String nombreSeleccionar = opcionesArchivos.getSelectedItem().toString();
-                String nombreCrear = textoNombre.replace('.', ' ');
-                String rutaSel = Funciones.getArchivos().get(nombreSeleccionar);
-                
-                
-                ConfirmarCrearArchivo ventana1 = new ConfirmarCrearArchivo(Funciones.principal, true);
+                String nombreCrear = formatear(textoNombre);
+
+                ConfirmarCrearArchivo ventana1 = new ConfirmarCrearArchivo(ctrl.getPrincipal(), true, ctrl);
                 ventana1.setInstrucciones(nombreSeleccionar, nombreCrear);
                 ventana1.setVisible(true);
+            } else if (!textoNombre.isBlank()) {
+                String nombreCrear = formatear(textoNombre);
+                ctrl.irVentanaEscitores(nombreCrear);
+            } else if (!valorCombo.equals("Ninguno")) {
+                ctrl.irVentanaEscitores(valorCombo);
+            } else {
+                advertencia.setText("Debe selecionar una opción o ingresar un nombre de archivo");
+                ctrl.getPrincipal().pack();
             }
+
         }
+    }
+
+    private String formatear(String palabra) {
+        String nombreCrear = palabra.replace('.', ' ');
+        nombreCrear = nombreCrear.replace('/', '_');
+        nombreCrear = nombreCrear.replace('\\', '_');
+        return nombreCrear;
     }
 
     private void cargarCombo() {
         opcionesArchivos.removeAllItems();
-        for (String s : Funciones.getNombresArchivos()) {
+        opcionesArchivos.addItem("Ninguno");
+        for (String s : ctrl.getNombresArchivos()) {
             opcionesArchivos.addItem(s);
         }
 
@@ -392,7 +427,7 @@ public class Menu extends javax.swing.JPanel {
         ingresaNombreField.setVisible(false);
         ingresaNombreLabel.setVisible(false);
         advertencia.setText("");
-        Funciones.principal.pack();
+        ctrl.getPrincipal().pack();
 
     }
 
@@ -404,7 +439,7 @@ public class Menu extends javax.swing.JPanel {
         ingresaNombreField.setVisible(true);
         ingresaNombreLabel.setVisible(true);
         advertencia.setText("");
-        Funciones.principal.pack();
+        ctrl.getPrincipal().pack();
 
     }
 
@@ -412,10 +447,23 @@ public class Menu extends javax.swing.JPanel {
         cargarCombo();
     }
 
+    public void resetVentana() {
+        opcionesArchivos.setSelectedIndex(0);
+        quiereLeer = false;
+        quiereEscribir = false;
+        hayArchivos = false;
+        ingresaNombreLabel.setVisible(false);
+        ingresaNombreField.setVisible(false);
+        selArchivo.setVisible(false);
+        opcionesArchivos.setVisible(false);
+        ingresaNombreField.setText("");
+        advertencia.setText("");
+    }
+
     private boolean quiereLeer = false;
     private boolean quiereEscribir = false;
     private boolean hayArchivos = false;
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel advertencia;

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package cliente;
+package cliente_v2;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,10 +21,13 @@ import javax.swing.border.LineBorder;
  */
 public class InicioSesion extends javax.swing.JPanel {
 
+    private ControladorCliente ctrl;
+
     /**
      * Creates new form InicioSesion
      */
-    public InicioSesion() {
+    public InicioSesion(ControladorCliente controlador) {
+        this.ctrl = controlador;
         initComponents();
 
         defaultPassBorder = passwordField.getBorder();
@@ -234,13 +237,13 @@ public class InicioSesion extends javax.swing.JPanel {
         } else {
             yaIntentoEnviarUser = true;
             yaEscribioPass = true;
-            boolean userValido = Funciones.validarUsuario(nombreUsuario);
+            boolean userValido = ctrl.validarUsuario(nombreUsuario);
             boolean datosValidos = false;
             if (!userValido) {
                 mensajeErrorUsuario.setText("Usario invalido, no existe en el sistema");
                 ingresarUsuario.setBorder(errorBorder);
             } else {
-                datosValidos = Funciones.validarDatos(nombreUsuario, contraseña);
+                datosValidos = ctrl.validarDatos(nombreUsuario, contraseña);
             }
 
             if (userValido && !datosValidos) {
@@ -249,7 +252,7 @@ public class InicioSesion extends javax.swing.JPanel {
             }
 
             if (userValido && datosValidos) {
-                Funciones.irMenu();
+                ctrl.irMenu();
             }
         }
 
@@ -257,7 +260,7 @@ public class InicioSesion extends javax.swing.JPanel {
 
     // Este incluye el click sobre el componente y el enter si estas parado sobre el, me sirve más
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
-        Funciones.principal.cerrar();
+        ctrl.getPrincipal().dispose();
     }//GEN-LAST:event_cancelarActionPerformed
 
     private void ingresarUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ingresarUsuarioMouseClicked
@@ -276,7 +279,7 @@ public class InicioSesion extends javax.swing.JPanel {
         }
 
         if (yaIntentoEnviarUser) {
-            ingresarUsuario.setText("");
+           // ingresarUsuario.setText("");
             mensajeErrorUsuario.setText("");
             yaIntentoEnviarUser = false;
             ingresarUsuario.setBorder(null);
@@ -295,7 +298,7 @@ public class InicioSesion extends javax.swing.JPanel {
         }
 
         if (yaIntentoEnviarUser) {
-            ingresarUsuario.setText("");
+           // ingresarUsuario.setText("");
             mensajeErrorUsuario.setText("");
             yaIntentoEnviarUser = false;
             ingresarUsuario.setBorder(null);
@@ -303,10 +306,10 @@ public class InicioSesion extends javax.swing.JPanel {
     }//GEN-LAST:event_ingresarUsuarioKeyReleased
 
     private void passwordFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyReleased
-         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
             ingresar();
         }
-        
+
         if (yaIntentoEnviarContra) {
             passwordField.setText("");
             mensajeErrorUsuario.setText("");
@@ -370,9 +373,25 @@ public class InicioSesion extends javax.swing.JPanel {
         mensajeErrorUsuario.setText("");
         ingresarUsuario.setBorder(defaultUserBorder);
         ingresarUsuario.setBorder(defaultPassBorder);
+        verContraseña.setText("Mostrar");
+        contraseñaExpuesta = false;
+        passwordField.setEchoChar('*');
+        verContraseña.setBackground(new Color(220, 220, 220));
+        verContraseña.setForeground(Color.black);
 
     }
 
+    public void resetVentana() {
+        contraseñaExpuesta = false;
+        yaEscribioUser = false;
+        yaEscribioPass = false;
+        yaIntentoEnviarContra = false;
+        yaIntentoEnviarUser = false;
+        mensajeErrorUsuario.setText("");
+        mensajeErrorContraseña.setText("");
+        ingresarUsuario.setText("");
+        passwordField.setText("");
+    }
     private boolean contraseñaExpuesta = false;
     private boolean yaEscribioUser = false;
     private boolean yaEscribioPass = false;

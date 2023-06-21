@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package cliente;
+package cliente_v2;
 
 import java.awt.Dimension;
-import v2.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,28 +14,17 @@ import java.awt.event.ActionListener;
  */
 public class Principal extends javax.swing.JFrame {
 
+    private ControladorCliente ctrl;
     /**
      * Creates new form Principal
      */
-    Menu menu = new Menu();
-    VentanaEscritor vE = new VentanaEscritor();
-    VentanaLector vL = new VentanaLector();
-    InicioSesion login = new InicioSesion();
-
-    public Principal() {
+    public Principal(ControladorCliente controlador) {
+        this.ctrl = controlador;
         initComponents();
-
         this.setLocationRelativeTo(null);
-        //this.
-
         jPanel1.setVisible(false);
-        contenedor.add(login);
         this.setResizable(false);
 
-        
-        //contenedor.add(vE);
-        //vE.setEnabled(false);
-        //vE.setVisible(false);
     }
 
     /**
@@ -74,85 +62,8 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Funciones.principal.setVisible(true);
-                Funciones.principal.pack();
-
-            }
-        });
-    }
-
-    public static void cerrar() {
-        System.exit(0);
-    }
-
-    public void volverMenu() {
-        contenedor.add(menu);
-        menu.setVisible(true);
-        jPanel1.setVisible(false);
-        contenedor.validate();
-    }
-
-    public void irMenu() {
-        contenedor.remove(login);
-        Funciones.principal.setContentPane(menu);
-        Funciones.principal.pack();
-
-    }
-
-    public void irVentanaEscritores(String rutaArchivo, boolean necesitaCrearArchivo) {
-        vE.setRutaArchivo(rutaArchivo, necesitaCrearArchivo);
-        contenedor.remove(menu);
-        Funciones.principal.setContentPane(vE);
-        Funciones.principal.pack();
-    }
-
-    public void irVentanaLectores(String rutaArchivo) {
-        contenedor.remove(menu);
-        vL.setRutaArchivo(rutaArchivo);
-        Funciones.principal.setContentPane(vL);
-        Funciones.principal.pack();
-    }
-
-    public void volverInicioSesion() {
-        login.restablecerVentana();
-        contenedor.remove(menu);
-        Funciones.principal.setContentPane(login);
-        contenedor.validate();
-        Funciones.principal.pack();
-    }
-
+  
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contenedor;
     private javax.swing.JPanel jPanel1;

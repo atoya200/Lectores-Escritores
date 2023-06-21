@@ -2,9 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package cliente_con_sockets;
+package cliente_v2;
 
-import cliente_v2.*;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 
@@ -154,33 +153,30 @@ public class VentanaEscritores extends javax.swing.JPanel {
 
     }//GEN-LAST:event_cancelarKeyPressed
 
-    public void setNombreArchivo(String nombreArchivo) throws FileNotFoundException {
+    public void setRutaArchivo(String rutaArchivo, boolean loCreo, String nombreArchivo) throws FileNotFoundException {
+        if (!loCreo) {
+            String texto = ctrl.recuperarArchivo(rutaArchivo);
+            textPain.setText(texto);
+            textoAMostrar = texto;
+        } else {
+            textPain.setText("");
+            textoAMostrar = "";
+        }
         titulo.setText(titulo.getText() + " " + nombreArchivo);
-        nombreArchivoEditar = nombreArchivo;
+        rutaArchivoEditar = rutaArchivo;
 
     }
 
     public void enviarDatos() {
         if (!textoAMostrar.equals(textPain.getText())) {
-            String lineas = textPain.getText();
-            ctrl.escribirArchivo(lineas, nombreArchivoEditar);
+            String[] lineas = textPain.getText().split("\n");
+            ctrl.escribirArchivo(lineas, rutaArchivoEditar);
         }
-    }
-    
-    public void setTextoMostrar(String texto){
-        textoAMostrar = texto;
-        textPain.setText(texto);
-        
-    }
-    
-    public void abrirConfirmacion(String texto){
-        ConfirmacionAccion confAct = new ConfirmacionAccion(ctrl.getPrincipal(), true, ctrl);
-        confAct.setMensaje(texto);
     }
    
     
     private String textoAMostrar = "";
-    private String nombreArchivoEditar = "";
+    private String rutaArchivoEditar = "";
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptar;
@@ -190,6 +186,4 @@ public class VentanaEscritores extends javax.swing.JPanel {
     private javax.swing.JTextPane textPain;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
-
-    
 }

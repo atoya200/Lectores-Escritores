@@ -2,9 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package cliente;
+package cliente_v2;
 
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,11 +15,14 @@ import java.awt.event.KeyEvent;
  */
 public class ConfirmarCrearArchivo extends javax.swing.JDialog {
 
+    private ControladorCliente ctrl;
+
     /**
      * Creates new form confirmarCrearArchivo
      */
-    public ConfirmarCrearArchivo(java.awt.Frame parent, boolean modal) {
+    public ConfirmarCrearArchivo(java.awt.Frame parent, boolean modal, ControladorCliente controlador) {
         super(parent, modal);
+        this.ctrl = controlador;
         initComponents();
 
         this.setTitle("Confirmar creación o selección");
@@ -40,6 +46,7 @@ public class ConfirmarCrearArchivo extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        instrucciones.setEditable(false);
         jScrollPane1.setViewportView(instrucciones);
 
         selecionado.setBackground(new java.awt.Color(200, 200, 202));
@@ -125,82 +132,60 @@ public class ConfirmarCrearArchivo extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarMouseClicked
-        this.dispose();
+
+        this.setVisible(false);
+
     }//GEN-LAST:event_cancelarMouseClicked
 
     private void cancelarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cancelarKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            this.dispose();
+
         }
     }//GEN-LAST:event_cancelarKeyPressed
 
     private void selecionadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_selecionadoKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            Funciones.irVentanaEscritores(nombreSeleccionado);
-            this.dispose();
+            try {
+                this.setVisible(false);
+                ctrl.irVentanaEscitores(nombreSeleccionado);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }//GEN-LAST:event_selecionadoKeyPressed
 
     private void selecionadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionadoMouseClicked
-        Funciones.irVentanaEscritores(nombreSeleccionado);
-        this.dispose();
+        try {
+            this.setVisible(false);
+            ctrl.irVentanaEscitores(nombreSeleccionado);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_selecionadoMouseClicked
 
     private void crearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_crearMouseClicked
-        Funciones.irVentanaEscritores(nombreACrear);
-        this.dispose();
+        try {
+            this.setVisible(false);
+            ctrl.irVentanaEscitores(nombreACrear);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_crearMouseClicked
 
     private void crearKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_crearKeyPressed
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-            Funciones.irVentanaEscritores(nombreACrear);
-            this.dispose();
+            try {
+                this.setVisible(false);
+                ctrl.irVentanaEscitores(nombreACrear);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }//GEN-LAST:event_crearKeyPressed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ConfirmarCrearArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ConfirmarCrearArchivo dialog = new ConfirmarCrearArchivo(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     public void setInstrucciones(String nombreSelecionado, String nombreACrear) {
         f1 += nombreSelecionado;
@@ -210,8 +195,6 @@ public class ConfirmarCrearArchivo extends javax.swing.JDialog {
         instrucciones.setText(f1 + f2 + f3);
 
     }
-
-   
 
     private String nombreSeleccionado = "";
     private String nombreACrear = "";

@@ -35,6 +35,7 @@ public class ControladorCliente {
         this.menu = new Menu(this);
         this.vE = new VentanaEscritores(this);
         this.vL = new VentanaLectores(this);
+
         this.login = new InicioSesion(this);
         principal.setVisible(true);
         principal.pack();
@@ -68,7 +69,7 @@ public class ControladorCliente {
 
     public void irVentanaEscitores(String nombreArchivo) throws FileNotFoundException {
         recuperarArchivo(nombreArchivo, false);
-        vE.setRutaArchivo(nombreArchivo);
+        vE.setNombreArchivo(nombreArchivo);
         principal.remove(menu);
         principal.setContentPane(vE);
         principal.validate();
@@ -76,8 +77,8 @@ public class ControladorCliente {
     }
 
     public void irVentanaLectores(String nombreArchivo) throws FileNotFoundException {
-        principal.remove(menu);
         recuperarArchivo(nombreArchivo, true);
+        principal.remove(menu);
         vL.setTitulo(nombreArchivo);
         principal.setContentPane(vL);
         principal.validate();
@@ -111,7 +112,7 @@ public class ControladorCliente {
         DataInputStream in;
         DataOutputStream out;
 
-        String mensaje = "Nombres archivos";
+        String mensaje = "Nombres archivos|";
         String respuesta = "";
 
         try {
@@ -133,12 +134,11 @@ public class ControladorCliente {
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
-        String[] nombres = respuesta.split("|");
-
+        String[] nombres = respuesta.split("\\|");
         return nombres;
     }
 
-    public  boolean validarDatos(String nombreUsuario, String contraseña) {
+    public boolean validarDatos(String nombreUsuario, String contraseña) {
         //Host del servidor
         final String HOST = "127.0.0.1";
         //Puerto del servidor
@@ -187,22 +187,6 @@ public class ControladorCliente {
         return false;
     }
 
-//    public static void cargarArchivos(String rutaArchivo) {
-//        File directorio = new File(rutaArchivo);
-//        if (directorio.isDirectory()) {
-//            File[] archivos = directorio.listFiles();
-//
-//            for (File archivo : archivos) {
-//                if (archivo.isFile()) {
-//                    int punto = archivo.getName().indexOf(".");
-//                    String nombreArchivo = archivo.getName().substring(0, punto);
-//                    Modelo.agregarArchivoMap(nombreArchivo, archivo.getAbsolutePath());
-//                }
-//
-//            }
-//
-//        }
-//    }
     public void recuperarArchivo(String nombreArchivo, boolean esLector) throws FileNotFoundException {
         //Host del servidor
         final String HOST = "127.0.0.1";
@@ -212,6 +196,7 @@ public class ControladorCliente {
         DataOutputStream out;
         String mensaje = nombreArchivo;
         String respuesta = "";
+
         if (!esLector) {
             mensaje = "1| |" + mensaje;
         }
@@ -227,6 +212,13 @@ public class ControladorCliente {
 
             //Recibo el mensaje del servidor
             respuesta = in.readUTF();
+
+            /*
+            En el caso del escritor, deberí gener un hilo donde mostar el contenido en pantalla
+
+             */
+            // out.writeUTF(mensaje); 
+            //respuesta = in.readUTF();
             sc.close();
 
         } catch (IOException ex) {

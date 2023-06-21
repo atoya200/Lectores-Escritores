@@ -9,49 +9,62 @@ package back_end;
  * @author Bruno
  */
 public class Recurso {
+
     int numLectores = 0;
     boolean hayEscritor = false;
-    
-    
+
     private String rutaRecurso = "";
 
-    public Recurso (String rutaRecurso) {
+    public Recurso(String rutaRecurso) {
         this.rutaRecurso = rutaRecurso;
     }
-    
-    
-    public String[] leer () {
+
+    public String[] leer() {
         //protocolo de entrada
         synchronized (this) {
-        while (hayEscritor)
+            while (hayEscritor)
             try {
                 wait();
+            } catch (Exception e) {
             }
-            catch (Exception e) {}
             numLectores++;
         }
 
+//        try {
+//            Thread.sleep(5000); // Detener hilo durante un segundo
+//        } catch (InterruptedException e) {
+//            // Manejar la excepción
+//        }
         // leyendo. Sin sincronizar para permitir concurrencia.
-        String [] lectura = ManejadorArchivosGenerico.leerArchivo(this.rutaRecurso, true);
-
+        String[] lectura = ManejadorArchivosGenerico.leerArchivo(this.rutaRecurso, false);
 
         // protocolo de salida
         synchronized (this) {
             numLectores--;
-            if (numLectores ==0) notifyAll();
+            if (numLectores == 0) {
+                notifyAll();
+            }
         }
         return lectura;
     }
-    synchronized public void escribir (String escritura) {
+
+    synchronized public void escribir(String escritura) {
         // protocolo de entrada
         synchronized (this) {
-        while (hayEscritor || (numLectores > 0))
+            while (hayEscritor || (numLectores > 0))
             try {
                 wait();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e) {e.printStackTrace();}
             hayEscritor = true;
         }
+
+//        try {
+//            Thread.sleep(15000); // Detener hilo durante un segundo
+//        } catch (InterruptedException e) {
+//            // Manejar la excepción
+//        }
 
         // escribiendo. Sin sincronizar, pero sólo habrá un escritor.
         ManejadorArchivosGenerico.escribirArchivo(this.rutaRecurso, new String[]{escritura});
@@ -62,5 +75,3 @@ public class Recurso {
         }
     }
 }
-
-//"C:\\Users\\Bruno\\Desktop\\UCU\\Tercer Semestre\\Sistemas Operativos\\Lectores y Escritores Pueba Sensilla\\src\\lectores\\y\\escritores\\pueba\\sensilla"
