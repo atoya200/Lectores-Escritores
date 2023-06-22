@@ -4,7 +4,7 @@
  */
 package versionFinal.frontEnd;
 
-import Sockets.Cliente;
+
 import java.io.DataInputStream;
 
 import java.io.DataOutputStream;
@@ -137,7 +137,7 @@ public class ControladorCliente {
             sc.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(Cliente.class
+            Logger.getLogger(ControladorCliente.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -168,7 +168,7 @@ public class ControladorCliente {
             sc.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(Cliente.class
+            Logger.getLogger(ControladorCliente.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -220,7 +220,7 @@ public class ControladorCliente {
             sc.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControladorCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (esLector) {
@@ -271,7 +271,7 @@ public class ControladorCliente {
             sc.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(Cliente.class
+            Logger.getLogger(ControladorCliente.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
