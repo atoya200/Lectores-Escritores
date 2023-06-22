@@ -4,8 +4,6 @@
  */
 package versionFinal.frontEnd;
 
-import cliente_con_sockets.*;
-import cliente_v2.*;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 
