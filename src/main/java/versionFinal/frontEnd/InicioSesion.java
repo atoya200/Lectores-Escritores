@@ -4,8 +4,7 @@
  */
 package versionFinal.frontEnd;
 
-import cliente_con_sockets.*;
-import cliente_v2.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
